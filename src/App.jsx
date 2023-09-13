@@ -1,11 +1,10 @@
-import './App.css'
+import { useState } from "react"
+import Router from "./router/Router";
+import publicRoutes from "./router/routes/publicRoutes";
 
 function App() {
-  return (
-    <>
-      <h1>Dashboard</h1> 
-    </>
-  )
+  const [allRoutes, setAllRoutes] = useState([...publicRoutes]);
+  return <Router allRoutes={allRoutes} />
 }
 
 export default App
