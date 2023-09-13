@@ -1,8 +1,11 @@
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { admin_login } from "../../../redux/store/Reducers/auth/authReducerSlice";
 
 const AdminLogin = () => {
     const [seePass, setSeePass] = useState(true);
+    const dispatch = useDispatch();
 
     // password show/hide function
     const handleSeePassword = () => {
@@ -19,7 +22,7 @@ const AdminLogin = () => {
             email,
             password,
         }
-        console.log(loginData);
+        dispatch(admin_login(loginData))
     }
 
     return (
