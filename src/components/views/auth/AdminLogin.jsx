@@ -1,11 +1,18 @@
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { admin_login } from "../../../redux/store/Reducers/auth/authReducerSlice";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../Loader/Loader";
+import { admin_login, messageClear } from "../../../redux/Reducers/auth/authReducerSlice";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
     const [seePass, setSeePass] = useState(true);
     const dispatch = useDispatch();
+    // for spinner, error and success message
+    const { loader, errorMessage, successMessage } = useSelector(state => state.auth);
+
+    const navigate = useNavigate();
 
     // password show/hide function
     const handleSeePassword = () => {
@@ -24,6 +31,19 @@ const AdminLogin = () => {
         }
         dispatch(admin_login(loginData))
     }
+
+    // for show error or success message in toast
+    useEffect(() => {
+        if (errorMessage) {
+            toast.error(errorMessage);
+            dispatch(messageClear());
+        }
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(messageClear());
+            navigate('/');
+        }
+    }, [errorMessage, successMessage]);
 
     return (
         <div className="min-w-screen min-h-screen bg-[#161d31] flex justify-center items-center">
@@ -72,8 +92,13 @@ const AdminLogin = () => {
 
                         {/* submit button */}
                         <button
+                            disabled={loader ? true : false}
                             type="submit"
-                            className="py-2 px-4 w-full bg-blue-500 hover:shadow-blue-500/30 hover:shadow-lg text-white rounded-md mb-3">Login</button>
+                            className={`py-2 px-4 w-full bg-blue-500 hover:shadow-blue-500/30 hover:shadow-lg text-white rounded-md mb-3 ${loader && 'bg-blue-400'} `}>
+                            {
+                                loader ? <Loader loadingText={'Logging in...'} /> : 'Login'
+                            }
+                        </button>
                     </form>
                 </div>
             </div>
