@@ -13,7 +13,8 @@ export const admin_login = createAsyncThunk(
     'auth/admin_login',
     async (info, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await api.post('/admin-login', info, { withCredentials: true })
+            const { data } = await api.post('/admin-login', info, { withCredentials: true });
+            localStorage.setItem('accessToken', data.token)
             return fulfillWithValue(data)
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -49,5 +50,5 @@ const authReducerSlice = createSlice({
     }
 })
 
-export const {messageClear} = authReducerSlice.actions;
+export const { messageClear } = authReducerSlice.actions;
 export default authReducerSlice.reducer;
