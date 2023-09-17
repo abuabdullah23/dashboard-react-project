@@ -20,6 +20,7 @@ module.exports = {
     "no-unused-vars": ["warn", { "varsIgnorePattern": "VARIABLE_NAME" }],
     "react/prop-types": "off",
     "react/jsx-uses-react": "error",   
-    "react/jsx-uses-vars": "error" 
+    "react/jsx-uses-vars": "error",
+    "no-unused-vars": "off",
   },
 }
