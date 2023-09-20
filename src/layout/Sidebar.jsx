@@ -27,6 +27,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
                         {
                             allNav.map((n, i) => <li key={i}>
                                 <Link
+                                    onClick={() => setShowSidebar(false)}
                                     to={n.path}
                                     className={`${pathname === n.path ? 'bg-slate-600 shadow-indigo-500/30 text-white duration-500' : 'text-[#d0d2d6] font-normal duration-200'} px-3 py-2 rounded-sm flex justify-start items-center gap-3 hover:pl-4 hover:bg-slate-600 transition-all w-full mb-1`}>
                                     <span>{n.icon}</span>
