@@ -51,7 +51,7 @@ const AdminLogin = () => {
                 <div className="bg-[#283046] p-4 rounded-md">
                     <div className="flex justify-center mb-5">
                         <div className="flex flex-col items-center gap-3">
-                            <img className="h-7" src="../../../../public/images/logo.png" alt="logo" />
+                            <img className="h-7" src="${import.meta.env.VITE_DASHBOARD_URL}/images/logo.png" alt="logo" />
                             <h2 className="text-3xl font-bold text-center text-slate-500">Admin Login</h2>
                         </div>
                     </div>

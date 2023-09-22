@@ -13,11 +13,12 @@ const Category = () => {
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
+            {/* Conditional rendering: show only small device */}
             <div className='flex lg:hidden justify-between items-center mb-5 p-4 bg-[#283046] rounded-md'>
                 <h1 className='text-[#d0d2d6] font-semibold text-sm'>Categories</h1>
                 <button onClick={() => setShow(true)} className='bg-indigo-500 shadow-lg hover:shadow-indigo-500/50 px-4 py-2 cursor-pointer text-white rounded-sm text-sm'>Add</button>
-
             </div>
+
             <div className='flex flex-wrap w-full'>
                 <div className='w-full lg:w-7/12 p-4 bg-[#283046] rounded-md'>
                     <div className='flex justify-between items-center'>
@@ -45,7 +46,7 @@ const Category = () => {
                                 {
                                     [1, 2, 3, 4, 5].map((item, i) => <tr key={i}>
                                         <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'>{item}</td>
-                                        <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><img className='h-11 w-11' src={`../../../../public/images/category/${item}.jpg`} alt="category image" /></td>
+                                        <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><img className='h-11 w-11' src={`${import.meta.env.VITE_DASHBOARD_URL}/images/category/${item}.jpg`} alt="category image" /></td>
                                         <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><span>Sports</span></td>
                                         <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'>
                                             <div className='flex justify-start items-center gap-4'>

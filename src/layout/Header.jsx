@@ -18,7 +18,7 @@ const Header = ({ showSidebar, setShowSidebar }) => {
                                 <h2 className='text-sm font-bold'>Zayed</h2>
                                 <span className='text-sm w-full font-normal'>Admin</span>
                             </div>
-                            <img className='w-11 h-11 rounded-full overflow-hidden' src="../../public/images/admin.jpg" alt="admin photo" />
+                            <img className='w-11 h-11 rounded-full overflow-hidden' src={`${import.meta.env.VITE_DASHBOARD_URL}/images/admin.jpg`} alt="admin photo" />
                         </div>
                     </div>
                 </div>

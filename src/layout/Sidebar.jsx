@@ -19,7 +19,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
             <div className={`w-[260px] fixed bg-[#283046] z-50 top-0 h-screen shadow-[0_0_15px_0_rgb(34_41_47_/_5%)] transition-all ${showSidebar ? 'left-0' : '-left-[260px] lg:left-0'}`}>
                 <div className="h-[70px] flex justify-center items-center mt-1">
                     <Link to='/' className="w-[180px] h-[50px]">
-                        <img src="../../public/images/logo.png" alt="logo" />
+                        <img src={`${import.meta.env.VITE_DASHBOARD_URL}/images/logo.png`} alt="logo" />
                     </Link>
                 </div>
                 <div className="px-4">
