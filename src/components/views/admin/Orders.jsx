@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BsArrowBarDown } from 'react-icons/bs';
 import Pagination from '../Pagination/Pagination';
+import { Link } from 'react-router-dom';
 
 const Orders = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -43,7 +44,9 @@ const Orders = () => {
                             <div className='py-4 w-[13%]'>$250</div>
                             <div className='py-4 w-[18%]'>Pending</div>
                             <div className='py-4 w-[18%]'>Running</div>
-                            <div className='py-4 w-[18%]'>View</div>
+                            <div className='py-4 w-[18%]'>
+                                <Link to='/admin/dashboard/order/details/1' className='hover:text-indigo-400'>View</Link>
+                            </div>
                             <div onClick={(e) => setShowSubOrder(!showSubOrder)} className='py-4 w-[8%] cursor-pointer'><BsArrowBarDown /></div>
                         </div>
                         {/* Suborder document */}

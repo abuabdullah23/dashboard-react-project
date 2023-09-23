@@ -39,7 +39,7 @@ const SellerRequest = () => {
                             {
                                 [1, 2, 3, 4, 5].map((item, i) => <tr className='border-b border-slate-700' key={i}>
                                     <td scope='row' className='py-2 px-4 font-normal whitespace-nowrap'>{item}</td>
-                                    <td scope='row' className='py-2 px-4 font-normal whitespace-nowrap'><img className='h-11 w-11' src={`${import.meta.env.VITE_DASHBOARD_URL}/images/seller.png`} alt="category image" /></td>
+                                    <td scope='row' className='py-2 px-4 font-normal whitespace-nowrap'><img className='h-11 w-11' src={`${import.meta.env.VITE_DASHBOARD_URL}/images/seller.png`} alt="seller image" /></td>
                                     <td scope='row' className='py-2 px-4 font-normal whitespace-nowrap'><span>Md. Ashikur Rahman</span></td>
                                     <td scope='row' className='py-2 px-4 font-normal whitespace-nowrap'><span>ashikur@gamil.com</span></td>
                                     <td scope='row' className='py-2 px-4 font-normal whitespace-nowrap'><span>inactive</span></td>
