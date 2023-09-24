@@ -7,7 +7,7 @@ const OrderDetails = () => {
                 <div className='flex justify-between items-center p-4'>
                     <h2 className='text-xl text-[#d0d2d6]'>Order Details</h2>
                     <select
-                        className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d7]'
+                        className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]'
                         name="" id="">
                         <option value="pending">pending</option>
                         <option value="processing">processing</option>

@@ -8,7 +8,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        const nav = getNav('admin');
+        const nav = getNav('seller');
         setAllNav(nav)
     }, [])
 

@@ -75,7 +75,7 @@ const SellerDetails = () => {
                 <div>
                     <form>
                         <div className='flex gap-4 py-3'>
-                            <select className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d7]' name="" id="">
+                            <select className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name="" id="">
                                 <option value="">--select status--</option>
                                 <option value="active">Active</option>
                                 <option value="deactive">Deactive</option>

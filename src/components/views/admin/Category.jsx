@@ -24,12 +24,12 @@ const Category = () => {
                     <div className='flex justify-between items-center'>
                         <select
                             onChange={(e) => setPerPage(parseInt(e.target.value))}
-                            className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d7]'>
+                            className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]'>
                             <option value="5">5</option>
                             <option value="15">15</option>
                             <option value="25">25</option>
                         </select>
-                        <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d7]' type="text" placeholder='search' />
+                        <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' type="text" placeholder='search' />
                     </div>
                     {/* Table data */}
                     <div className='relative overflow-x-auto'>
@@ -83,7 +83,7 @@ const Category = () => {
                             <form>
                                 <div className='flex flex-col w-full gap-1 mb-3'>
                                     <label htmlFor="name">Category name</label>
-                                    <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d7]' type="text" id='name' name='category_name' placeholder='category name' />
+                                    <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' type="text" id='name' name='category_name' placeholder='category name' />
                                 </div>
                                 <div>
                                     <label className='flex flex-col justify-center items-center h-[238px] cursor-pointer border border-[#d0d2d6] border-dashed hover:border-indigo-500 w-full' htmlFor="image">
@@ -93,8 +93,7 @@ const Category = () => {
                                 </div>
                                 <input className='hidden' type="file" name="image" id="image" />
                                 <div>
-                                    <button className='bg-blue-500 w-full hover:shadow
-                                    bg-blue-500/50 shadow-lg text-white rounded-md px-7 py-2 my-2'>Add Category</button>
+                                    <button className='bg-blue-500 w-full  hover:shadow-blue-500/50 shadow-lg text-white rounded-md px-7 py-2 my-2'>Add Category</button>
                                 </div>
                             </form>
                         </div>

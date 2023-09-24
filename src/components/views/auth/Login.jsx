@@ -11,7 +11,7 @@ const Login = () => {
     setSeePass(!seePass)
   }
 
-  // handle registration form value
+  // handle login form value
   const handleSubmitForm = (event) => {
     event.preventDefault();
     const form = event.target;
