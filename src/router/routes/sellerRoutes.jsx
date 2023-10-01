@@ -6,6 +6,9 @@ const Products = lazy(() => import('../../components/views/seller/Products'));
 const DiscountProducts = lazy(() => import('../../components/views/seller/DiscountProducts'));
 const Orders = lazy(() => import('../../components/views/seller/Orders'));
 const Payments = lazy(() => import('../../components/views/seller/Payments'));
+const SellerToAdminChat = lazy(() => import('../../components/views/seller/SellerToAdminChat'));
+const SellerToCustomerChat = lazy(() => import('../../components/views/seller/SellerToCustomerChat'));
+const Profile = lazy(() => import('../../components/views/seller/Profile'));
 
 export const sellerRoutes = [
     {
@@ -16,31 +19,61 @@ export const sellerRoutes = [
     {
         path: 'seller/dashboard',
         element: <SellerDashboard />,
-        ability: ['seller']
+        role: 'seller',
+        status: 'active'
     },
     {
         path: 'seller/dashboard/add-product',
         element: <AddProduct />,
-        ability: ['seller']
+        role: 'seller',
+        status: 'active'
     },
     {
         path: 'seller/dashboard/products',
         element: <Products />,
-        ability: ['seller']
+        role: 'seller',
+        status: 'active'
     },
     {
         path: 'seller/dashboard/discount-products',
         element: <DiscountProducts />,
-        ability: ['seller']
+        role: 'seller',
+        status: 'active'
     },
     {
         path: 'seller/dashboard/orders',
         element: <Orders />,
-        ability: ['seller']
+        role: 'seller',
+        ability: ['active', 'deactive']
     },
     {
         path: 'seller/dashboard/payments',
         element: <Payments />,
-        ability: ['seller']
+        role: 'seller',
+        status: 'active'
+    },
+    {
+        path: 'seller/dashboard/chat-support',
+        element: <SellerToAdminChat />,
+        role: 'seller',
+        ability: ['active', 'deactive', 'pending']
+    },
+    {
+        path: 'seller/dashboard/chat-customer/:customerId',
+        element: <SellerToCustomerChat />,
+        role: 'seller',
+        status: 'active'
+    },
+    {
+        path: 'seller/dashboard/chat-customer',
+        element: <SellerToCustomerChat />,
+        role: 'seller',
+        status: 'active'
+    },
+    {
+        path: 'seller/dashboard/profile',
+        element: <Profile />,
+        role: 'seller',
+        status: 'active'
     },
 ]
