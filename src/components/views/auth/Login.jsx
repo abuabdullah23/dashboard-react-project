@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
 import SocialLogin from "../../SocialLogin/SocialLogin";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Loader from "../../Loader/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { messageClear, seller_login } from "../../../redux/Reducers/auth/authReducerSlice";
 
 const Login = () => {
   const [seePass, setSeePass] = useState(true);
+  const dispatch = useDispatch();
+  const { loader, errorMessage, successMessage } = useSelector(state => state.auth);
 
   // password show/hide function
   const handleSeePassword = () => {
@@ -21,8 +27,20 @@ const Login = () => {
       email,
       password,
     }
-    console.log(loginData);
+    dispatch(seller_login(loginData))
   }
+
+  // for show error or success message in toast
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage)
+      dispatch(messageClear())
+    }
+    if (errorMessage) {
+      toast.error(errorMessage)
+      dispatch(messageClear())
+    }
+  }, [successMessage, errorMessage])
 
   return (
     <div className="min-w-screen min-h-screen bg-[#161d31] flex justify-center items-center">
@@ -68,8 +86,13 @@ const Login = () => {
 
             {/* submit button */}
             <button
+              disabled={loader ? true : false}
               type="submit"
-              className="py-2 px-4 w-full bg-blue-500 hover:shadow-blue-500/30 hover:shadow-lg text-white rounded-md mb-3">Login</button>
+              className={`py-2 px-4 w-full bg-blue-500 hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md mb-3 ${loader && 'bg-blue-400'} `}>
+              {
+                loader ? <Loader loadingText={'Logging in...'} /> : 'Login'
+              }
+            </button>
 
             <div className="mb-3 flex items-center justify-center">
               <p>New in this website? <Link to='/register' className="text-blue-400">Register here</Link></p>

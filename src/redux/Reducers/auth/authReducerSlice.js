@@ -22,7 +22,7 @@ export const admin_login = createAsyncThunk(
     }
 )
 
-// admin login info and api config
+// seller register info and api config
 export const seller_register = createAsyncThunk(
     'auth/seller_register',
     async (info, { rejectWithValue, fulfillWithValue }) => {
@@ -30,6 +30,20 @@ export const seller_register = createAsyncThunk(
             console.log(info);
 
             const { data } = await api.post('/seller-register', info, { withCredentials: true });
+            localStorage.setItem('accessToken', data.token)
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
+// seller login info and api config
+export const seller_login = createAsyncThunk(
+    'auth/seller_login',
+    async (info, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const { data } = await api.post('/seller-login', info, { withCredentials: true });
             localStorage.setItem('accessToken', data.token)
             return fulfillWithValue(data)
         } catch (error) {
@@ -62,6 +76,7 @@ const authReducerSlice = createSlice({
             state.loader = false
             state.successMessage = payload.message;
         },
+
         [seller_register.pending]: (state, _) => {
             state.loader = true
         },
@@ -70,6 +85,18 @@ const authReducerSlice = createSlice({
             state.errorMessage = payload.error
         },
         [seller_register.fulfilled]: (state, { payload }) => {
+            state.loader = false
+            state.successMessage = payload.message;
+        },
+
+        [seller_login.pending]: (state, _) => {
+            state.loader = true
+        },
+        [seller_login.rejected]: (state, { payload }) => {
+            state.loader = false
+            state.errorMessage = payload.error
+        },
+        [seller_login.fulfilled]: (state, { payload }) => {
             state.loader = false
             state.successMessage = payload.message;
         },
