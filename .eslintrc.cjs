@@ -23,5 +23,7 @@ module.exports = {
     "react/jsx-uses-vars": "error",
     "no-unused-vars": "off",
     "react/display-name": "off",
+    "react-hooks/exhaustive-deps" : "off",
+    "react-refresh/only-export-components": "off",
   },
 }

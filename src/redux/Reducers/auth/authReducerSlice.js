@@ -22,6 +22,22 @@ export const admin_login = createAsyncThunk(
     }
 )
 
+// admin login info and api config
+export const seller_register = createAsyncThunk(
+    'auth/seller_register',
+    async (info, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            console.log(info);
+
+            const { data } = await api.post('/seller-register', info, { withCredentials: true });
+            localStorage.setItem('accessToken', data.token)
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
 const authReducerSlice = createSlice({
     name: 'auth',
     initialState,
@@ -43,6 +59,17 @@ const authReducerSlice = createSlice({
             state.errorMessage = payload.error
         },
         [admin_login.fulfilled]: (state, { payload }) => {
+            state.loader = false
+            state.successMessage = payload.message;
+        },
+        [seller_register.pending]: (state, _) => {
+            state.loader = true
+        },
+        [seller_register.rejected]: (state, { payload }) => {
+            state.loader = false
+            state.errorMessage = payload.error
+        },
+        [seller_register.fulfilled]: (state, { payload }) => {
             state.loader = false
             state.successMessage = payload.message;
         },

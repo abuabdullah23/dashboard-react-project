@@ -1,30 +1,44 @@
 import { Link } from "react-router-dom";
 import SocialLogin from "../../SocialLogin/SocialLogin";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useState } from "react";
+import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../Loader/Loader";
+import { messageClear, seller_register } from "../../../redux/Reducers/auth/authReducerSlice";
 
 const Register = () => {
     const [seePass, setSeePass] = useState(true);
 
-    // password show/hide function
-    const handleSeePassword = () => {
-        setSeePass(!seePass)
-    }
+    const dispatch = useDispatch();
+    const { loader, successMessage, errorMessage } = useSelector(state => state.auth);
 
     // handle registration form value
     const handleSubmitForm = (event) => {
         event.preventDefault();
         const form = event.target;
-        const name = form.name.value;
         const email = form.email.value;
+        const name = form.name.value;
         const password = form.password.value;
         const registerData = {
-            name,
             email,
+            name,
             password,
         }
-        console.log(registerData);
+        dispatch(seller_register(registerData));
     }
+
+    // for show error or success message in toast
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage)
+            dispatch(messageClear())
+        }
+        if (errorMessage) {
+            toast.error(errorMessage)
+            dispatch(messageClear())
+        }
+    }, [successMessage, errorMessage])
 
     return (
         <div className="min-w-screen min-h-screen bg-[#161d31] flex justify-center items-center">
@@ -70,7 +84,7 @@ const Register = () => {
                                     name="password"
                                     className="w-full px-3 py-2 outline-none border border-slate-700 bg-transparent rounded-md text-gray-100 focus:border-gray-400 overflow-hidden" />
                                 <div
-                                    onClick={() => handleSeePassword(!seePass)}
+                                    onClick={() => setSeePass(!seePass)}
                                     className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2">
                                     {
                                         seePass ? <FiEye /> : <FiEyeOff />
@@ -81,6 +95,7 @@ const Register = () => {
                         {/* checkbox */}
                         <div className="flex items-center gap-3 w-full mb-3">
                             <input
+                                required
                                 type="checkbox"
                                 id="checkbox"
                                 name="checkbox"
@@ -90,8 +105,13 @@ const Register = () => {
 
                         {/* submit button */}
                         <button
+                            disabled={loader ? true : false}
                             type="submit"
-                            className="py-2 px-4 w-full bg-blue-500 hover:shadow-blue-500/30 hover:shadow-lg text-white rounded-md mb-3">Sign Up</button>
+                            className={`py-2 px-4 w-full bg-blue-500 hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md mb-3 ${loader && 'bg-blue-400'} `}>
+                            {
+                                loader ? <Loader loadingText={'Signing up...'} /> : 'Sign Up'
+                            }
+                        </button>
 
                         <div className="mb-3 flex items-center justify-center">
                             <p>Already have an account? <Link to='/login' className="text-blue-400">Login here</Link></p>
