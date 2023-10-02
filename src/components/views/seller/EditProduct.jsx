@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BsImages } from 'react-icons/bs';
-import { IoCloseSharp } from 'react-icons/io5';
 
-const AddProduct = () => {
+const EditProduct = () => {
     const [catShow, setCatShow] = useState(false);
     const [category, setCategory] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [imageShow, setImageShow] = useState([]);
-    const [images, setImages] = useState([]);
 
     const categories = [
         { id: 1, name: 'Sports' },
@@ -32,45 +29,16 @@ const AddProduct = () => {
         }
     }
 
-    // handle image for add product
-    const handleImage = (e) => {
-        const files = e.target.files;
-        const length = files.length;
-
-        if (length > 0) {
-            setImages([...images, ...files]);
-            let imageUrl = [];
-
-            for (let i = 0; i < length; i++) {
-                imageUrl.push({ url: URL.createObjectURL(files[i]) })
-            }
-            setImageShow([...imageShow, ...imageUrl]);
-        }
-    }
-
     // change image when select add product image
-    const changeImage = (img, index) => {
-        if (img) {
-            let tempUrl = imageShow;
-            let tempImages = images;
-
-            tempImages[index] = img;
-            tempUrl[index] = { url: URL.createObjectURL(img) };
-            setImageShow([...tempUrl]);
-            setImages([...tempImages]);
+    const changeImage = (img, files) => {
+        if (files.length > 0) {
+            console.log(img);
+            console.log(files[0]);
         }
     }
 
-    // remove image
-    const removeImage = (i) => {
-        const filterImage = images.filter((img, index) => index !== i);
-        const filterImageUrl = imageShow.filter((img, index) => index !== i);
-        setImages(filterImage);
-        setImageShow(filterImageUrl);
-    }
-
-    // handle add product form value
-    const handleAddProductForm = (event) => {
+    // handle edit product form value
+    const handleUpdateProductForm = (event) => {
         event.preventDefault();
         const form = event.target;
         const name = form.name.value;
@@ -90,21 +58,29 @@ const AddProduct = () => {
             description,
             imageShow
         }
-        console.log(productData);
     }
+
+    useEffect(() => {
+        setImageShow([
+            "blob:http://localhost:5173/482afe69-09c9-4fdc-94b7-f7df2a10d64e",
+            "blob:http://localhost:5173/482afe69-09c9-4fdc-94b7-f7df2a10d64e",
+        ])
+    }, [])
+
+
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
             <div className='w-full p-4 bg-[#283046] rounded-md'>
                 <div className='flex justify-between items-center pb-4'>
-                    <h2 className='text-xl font-semibold'>Add Products</h2>
+                    <h2 className='text-xl font-semibold'>Edit Product</h2>
                     <Link className='bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg rounded-sm px-7 py-2 my-2' to='/seller/dashboard/products'>
                         Products
                     </Link>
                 </div>
                 {/* form */}
                 <div>
-                    <form onSubmit={handleAddProductForm}>
+                    <form onSubmit={handleUpdateProductForm}>
                         <div className='flex flex-col md:flex-row gap-4 w-full mb-4'>
                             <div className='flex flex-col w-full gap-1'>
                                 <label htmlFor="name">Product name</label>
@@ -120,7 +96,7 @@ const AddProduct = () => {
                             {/* select category option */}
                             <div className='flex flex-col w-full gap-1 relative'>
                                 <label htmlFor="category">Category</label>
-                                <input readOnly value={category} onClick={() => setCatShow(!catShow)} className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' id='category' placeholder='--select category--' type="text" name='category' />
+                                <input readOnly value={category} onClick={() => setCatShow(!catShow)} className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' id='category' placeholder='--select category--' type="text" />
                                 <div className={`absolute top-[101%] bg-slate-800 w-full transition-all ${catShow ? 'scale-100' : 'scale-0'}`}>
                                     <div className='w-full px-4 py-2 fixed'>
                                         <input value={searchValue} onChange={categorySearch} className='w-full px-3 py-1 border border-slate-700 focus:border-indigo-500 outline-none bg-transparent rounded-md text-[#d0d2d6] overflow-hidden' type="text" placeholder='search' />
@@ -168,23 +144,18 @@ const AddProduct = () => {
 
                         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 xs:gap-4 md:gap-4 w-full mb-4'>
                             {
-                                imageShow.map((img, i) => <div className='h-[180px] relative' key={i}>
+                                imageShow.map((img, i) => <div key={i}>
                                     <label htmlFor={i}>
-                                        <img className='w-full h-full rounded-sm object-cover' src={img.url} alt="" />
+                                        <img src={img} alt="image" />
                                     </label>
-                                    <input onChange={(e) => changeImage(e.target.files[0], i)} id={i} type="file" className='hidden' />
-                                    <span onClick={() => removeImage(i)} className='p-2 z-10 cursor-pointer bg-red-600 hover:shadow-lg hover:shadow-red-500/50 text-white absolute top-1 right-1 rounded-full'><IoCloseSharp /></span>
+                                    <input onChange={(e) => changeImage(img, e.target.files)} type="file" id={i} className='hidden' />
                                 </div>)
                             }
-                            <label htmlFor="image" className='flex flex-col justify-center items-center h-[180px] cursor-pointer border border-dashed w-full hover:border-indigo-500 border-[#d0d2d6] rounded-sm'>
-                                <span><BsImages /></span>
-                                <span>select image</span>
-                            </label>
-                            <input multiple onChange={handleImage} className='hidden' type="file" name='image' id='image' />
+
                         </div>
                         <div>
-                            <button type='submit' className='bg-blue-500 
-                            hover:shadow-blue-500/50 shadow-lg text-white rounded-md px-7 py-2 my-2'>Add Product</button>
+                            <button className='bg-blue-500 
+                            hover:shadow-blue-500/50 shadow-lg text-white rounded-md px-7 py-2 my-2'>Update Product</button>
                         </div>
                     </form>
                 </div>
@@ -193,4 +164,4 @@ const AddProduct = () => {
     );
 };
 
-export default AddProduct;
+export default EditProduct;

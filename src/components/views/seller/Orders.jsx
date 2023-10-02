@@ -38,7 +38,7 @@ const Orders = () => {
                                         <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'>145</td>
                                         <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'><span>Pending</span></td>
                                         <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'><span>Running</span></td>
-                                        <td scope='row' className='font-medium whitespace-nowrap'> <Link className='w-fit p-[6px] bg-green-500 rounded-sm hover:shadow-lg hover:shadow-green-500/50 flex items-center justify-center'><FaEye /></Link></td>
+                                        <td scope='row' className='font-medium whitespace-nowrap'> <Link to={`/seller/dashboard/order/details/523`} className='w-fit p-[6px] bg-green-500 rounded-sm hover:shadow-lg hover:shadow-green-500/50 flex items-center justify-center'><FaEye /></Link></td>
                                     </tr>)
                                 }
                             </tbody>

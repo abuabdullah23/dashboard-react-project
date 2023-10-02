@@ -3,8 +3,10 @@ const Home = lazy(() => import('../../components/views/Home/Home'));
 const SellerDashboard = lazy(() => import('../../components/views/seller/SellerDashboard'));
 const AddProduct = lazy(() => import('../../components/views/seller/AddProduct'));
 const Products = lazy(() => import('../../components/views/seller/Products'));
+const EditProduct = lazy(() => import('../../components/views/seller/EditProduct'));
 const DiscountProducts = lazy(() => import('../../components/views/seller/DiscountProducts'));
 const Orders = lazy(() => import('../../components/views/seller/Orders'));
+const OrderDetails = lazy(() => import('../../components/views/seller/OrderDetails'));
 const Payments = lazy(() => import('../../components/views/seller/Payments'));
 const SellerToAdminChat = lazy(() => import('../../components/views/seller/SellerToAdminChat'));
 const SellerToCustomerChat = lazy(() => import('../../components/views/seller/SellerToCustomerChat'));
@@ -35,6 +37,12 @@ export const sellerRoutes = [
         status: 'active'
     },
     {
+        path: 'seller/dashboard/edit-product/:productId',
+        element: <EditProduct />,
+        role: 'seller',
+        status: 'active'
+    },
+    {
         path: 'seller/dashboard/discount-products',
         element: <DiscountProducts />,
         role: 'seller',
@@ -43,6 +51,12 @@ export const sellerRoutes = [
     {
         path: 'seller/dashboard/orders',
         element: <Orders />,
+        role: 'seller',
+        ability: ['active', 'deactive']
+    },
+    {
+        path: 'seller/dashboard/order/details/:orderId',
+        element: <OrderDetails />,
         role: 'seller',
         ability: ['active', 'deactive']
     },
