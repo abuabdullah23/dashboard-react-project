@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SocialLogin from "../../SocialLogin/SocialLogin";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
@@ -12,6 +12,7 @@ const Register = () => {
 
     const dispatch = useDispatch();
     const { loader, successMessage, errorMessage } = useSelector(state => state.auth);
+    const navigate = useNavigate();
 
     // handle registration form value
     const handleSubmitForm = (event) => {
@@ -33,6 +34,7 @@ const Register = () => {
         if (successMessage) {
             toast.success(successMessage)
             dispatch(messageClear())
+            navigate('/')
         }
         if (errorMessage) {
             toast.error(errorMessage)

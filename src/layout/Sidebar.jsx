@@ -2,15 +2,18 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getNav } from "../navigation/index";
 import { BiLogOutCircle } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 const Sidebar = ({ showSidebar, setShowSidebar }) => {
     const [allNav, setAllNav] = useState([]);
     const { pathname } = useLocation();
 
+    const { role } = useSelector(state => state.auth);
+
     useEffect(() => {
-        const nav = getNav('seller');
+        const nav = getNav(role);
         setAllNav(nav)
-    }, [])
+    }, [role])
 
     return (
         <div>

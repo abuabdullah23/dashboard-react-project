@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SocialLogin from "../../SocialLogin/SocialLogin";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ const Login = () => {
   const [seePass, setSeePass] = useState(true);
   const dispatch = useDispatch();
   const { loader, errorMessage, successMessage } = useSelector(state => state.auth);
+  const navigate = useNavigate();
 
   // password show/hide function
   const handleSeePassword = () => {
@@ -35,6 +36,7 @@ const Login = () => {
     if (successMessage) {
       toast.success(successMessage)
       dispatch(messageClear())
+      navigate('/')
     }
     if (errorMessage) {
       toast.error(errorMessage)

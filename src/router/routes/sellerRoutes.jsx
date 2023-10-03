@@ -1,5 +1,4 @@
 import { lazy } from "react";
-const Home = lazy(() => import('../../components/views/Home/Home'));
 const SellerDashboard = lazy(() => import('../../components/views/seller/SellerDashboard'));
 const AddProduct = lazy(() => import('../../components/views/seller/AddProduct'));
 const Products = lazy(() => import('../../components/views/seller/Products'));
@@ -11,12 +10,19 @@ const Payments = lazy(() => import('../../components/views/seller/Payments'));
 const SellerToAdminChat = lazy(() => import('../../components/views/seller/SellerToAdminChat'));
 const SellerToCustomerChat = lazy(() => import('../../components/views/seller/SellerToCustomerChat'));
 const Profile = lazy(() => import('../../components/views/seller/Profile'));
+const PendingSeller = lazy(() => import('../../components/views/pages/PendingSeller'));
+const DeactiveSeller = lazy(() => import('../../components/views/pages/DeactiveSeller'));
 
 export const sellerRoutes = [
     {
-        path: '/',
-        element: <Home />,
-        ability: ['admin', 'seller']
+        path: 'seller/account-pending',
+        element: < PendingSeller />,
+        ability: 'seller',
+    },
+    {
+        path: 'seller/account-deactive',
+        element: <DeactiveSeller />,
+        ability: 'seller',
     },
     {
         path: 'seller/dashboard',
@@ -52,13 +58,13 @@ export const sellerRoutes = [
         path: 'seller/dashboard/orders',
         element: <Orders />,
         role: 'seller',
-        ability: ['active', 'deactive']
+        visibility: ['active', 'deactive']
     },
     {
         path: 'seller/dashboard/order/details/:orderId',
         element: <OrderDetails />,
         role: 'seller',
-        ability: ['active', 'deactive']
+        visibility: ['active', 'deactive']
     },
     {
         path: 'seller/dashboard/payments',
@@ -70,7 +76,7 @@ export const sellerRoutes = [
         path: 'seller/dashboard/chat-support',
         element: <SellerToAdminChat />,
         role: 'seller',
-        ability: ['active', 'deactive', 'pending']
+        visibility: ['active', 'deactive', 'pending']
     },
     {
         path: 'seller/dashboard/chat-customer/:customerId',

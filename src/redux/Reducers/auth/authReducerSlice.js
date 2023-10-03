@@ -1,11 +1,30 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../api/api";
+import jwtDecode from "jwt-decode";
+
+
+const returnRole = (token) => {
+    if (token) {
+        const decodeToken = jwtDecode(token);
+        const expireTime = new Date(decodeToken.exp * 1000);
+        if (new Date() > expireTime) {
+            localStorage.removeItem('accessToken');
+            return '';
+        } else {
+            return decodeToken.role;
+        }
+    } else {
+        return '';
+    }
+}
 
 const initialState = {
     successMessage: '',
     errorMessage: '',
     loader: false,
-    userInfo: ''
+    userInfo: '',
+    role: returnRole(localStorage.getItem('accessToken')),
+    token: localStorage.getItem('accessToken')
 }
 
 // admin login info and api config
@@ -52,6 +71,19 @@ export const seller_login = createAsyncThunk(
     }
 )
 
+// get user info
+export const get_user_info = createAsyncThunk(
+    'auth/get_user_info',
+    async (_, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const { data } = await api.get('/get-user', { withCredentials: true });
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
 const authReducerSlice = createSlice({
     name: 'auth',
     initialState,
@@ -75,6 +107,8 @@ const authReducerSlice = createSlice({
         [admin_login.fulfilled]: (state, { payload }) => {
             state.loader = false
             state.successMessage = payload.message;
+            state.token = payload.token;
+            state.role = returnRole(payload.token);
         },
 
         [seller_register.pending]: (state, _) => {
@@ -87,6 +121,8 @@ const authReducerSlice = createSlice({
         [seller_register.fulfilled]: (state, { payload }) => {
             state.loader = false
             state.successMessage = payload.message;
+            state.token = payload.token;
+            state.role = returnRole(payload.token);
         },
 
         [seller_login.pending]: (state, _) => {
@@ -99,6 +135,13 @@ const authReducerSlice = createSlice({
         [seller_login.fulfilled]: (state, { payload }) => {
             state.loader = false
             state.successMessage = payload.message;
+            state.token = payload.token;
+            state.role = returnRole(payload.token);
+        },
+
+        [get_user_info.fulfilled]: (state, { payload }) => {
+            state.loader = false
+            state.userInfo = payload.userInfo;
         },
 
     }
