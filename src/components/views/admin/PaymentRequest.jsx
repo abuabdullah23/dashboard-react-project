@@ -13,7 +13,7 @@ const PaymentRequest = () => {
 
     const Row = ({ index, style }) => {
         return (
-            <div className="flex text-sm">
+            <div style={style} className="flex text-sm">
                 <div className="w-[20%] p-2 whitespace-nowrap">{index + 1}</div>
                 <div className="w-[20%] p-2 whitespace-nowrap">$54452</div>
                 <div className="w-[20%] p-2 whitespace-nowrap">

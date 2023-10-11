@@ -15,7 +15,9 @@ const Payments = () => {
     // this function use for react-window
     const Row = ({ index, style }) => {
         return (
-            <div className="flex text-sm">
+            <div
+                style={style}
+                className="flex text-sm">
                 <div className="w-[25%] p-2 whitespace-nowrap">{index + 1}</div>
                 <div className="w-[25%] p-2 whitespace-nowrap">$54452</div>
                 <div className="w-[25%] p-2 whitespace-nowrap">
@@ -116,7 +118,7 @@ const Payments = () => {
                 </div>
 
                 {/* success withdraw section */}
-                <div className='bg-[#283046] rounded-md p-5'>                    
+                <div className='bg-[#283046] rounded-md p-5'>
                     <div>
                         <h2 className='text-lg pb-4'>Success Withdraw</h2>
                         <div className='w-full overflow-x-auto'>

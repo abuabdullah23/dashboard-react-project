@@ -32,7 +32,6 @@ const Pagination = ({ pageNumber, setPageNumber, totalItem, perPage, showItem })
         }
         return buttons;
     }
-    console.log(pageNumber);
     return (
         <ul className="flex gap-3">
             {

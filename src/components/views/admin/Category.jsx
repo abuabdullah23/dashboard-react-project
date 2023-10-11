@@ -1,15 +1,70 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import Pagination from '../Pagination/Pagination';
 import { BsImage } from 'react-icons/bs';
 import { AiOutlineClose } from 'react-icons/ai';
+import Loader from '../../Loader/Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { categoryAdd } from '../../../redux/Reducers/category/categoryReducer';
+import toast from 'react-hot-toast';
+import { messageClear } from '../../../redux/Reducers/auth/authReducerSlice';
 
 const Category = () => {
+    const dispatch = useDispatch();
+    const { loader, successMessage, errorMessage } = useSelector(state => state.category)
     const [perPage, setPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
     const [show, setShow] = useState(false);
     const [searchValue, setSearchValue] = useState('');
+    const [imageShow, setImageShow] = useState('');
+    const [state, setState] = useState({
+        name: '',
+        image: ''
+    })
+    // handleImage
+    const handleImage = (e) => {
+        const files = e.target.files;
+        if (files.length > 0) {
+            setImageShow(URL.createObjectURL(files[0]))
+            setState({
+                ...state,
+                image: files[0]
+            })
+        }
+    }
+
+    // handle add category
+    const handleAddCategory = (e) => {
+        e.preventDefault();
+        // const form = e.target;
+        // const category_name = form.category_name.value;
+        // const categoryData = {
+        //     name: category_name,
+        //     image: state.image
+        // }
+        dispatch(categoryAdd(state))
+    }
+
+    // console.log(state);
+
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage)
+            dispatch(messageClear())
+            setState({
+                name: '',
+                image: ''
+            })
+            setImageShow('')
+        }
+        if (errorMessage) {
+            toast.error(errorMessage)
+            dispatch(messageClear())
+        }
+
+    }, [successMessage, errorMessage])
+
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
@@ -71,7 +126,7 @@ const Category = () => {
                     </div>
                 </div>
 
-                <div className={`w-[320px] lg:w-5/12 translate-x-100 lg:relative lg:right-0 fixed ${show ? 'right-0' : '-right-[340px]'} z-[9999] top-0 transition-all duration-500`}>
+                <div className={`w-[320px] lg:w-5/12 translate-x-100 lg:relative lg:right-0 fixed ${show ? 'right-0 z-[9999]' : '-right-[340px]'}  top-0 transition-all duration-500`}>
                     <div className='w-full pl-6'>
                         <div className='bg-[#283046] h-screen lg:h-auto px-3 py-2 lg:rounded-md text-[#d0d2d6]'>
                             <div className='flex justify-between items-center mb-4'>
@@ -80,20 +135,38 @@ const Category = () => {
                                     <AiOutlineClose className='text-[#d0d2d6]' />
                                 </div>
                             </div>
-                            <form>
+                            <form onSubmit={handleAddCategory}>
                                 <div className='flex flex-col w-full gap-1 mb-3'>
-                                    <label htmlFor="name">Category name</label>
-                                    <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' type="text" id='name' name='category_name' placeholder='category name' />
+                                    <label htmlFor="category_name">Category name</label>
+                                    <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]'
+                                        value={state.name}
+                                        onChange={(e) => setState({ ...state, name: e.target.value })}
+                                        type="text" id='category_name' name='category_name' placeholder='category name' required />
                                 </div>
                                 <div>
                                     <label className='flex flex-col justify-center items-center h-[238px] cursor-pointer border border-[#d0d2d6] border-dashed hover:border-indigo-500 w-full' htmlFor="image">
-                                        <span><BsImage /></span>
-                                        <span>Select Image</span>
+                                        {
+                                            imageShow ? <img className='h-full w-full object-cover object-top' src={imageShow} alt="image" /> :
+                                                <>
+                                                    <span><BsImage /></span>
+                                                    <span>Select Image</span>
+                                                </>
+                                        }
                                     </label>
                                 </div>
-                                <input className='hidden' type="file" name="image" id="image" />
-                                <div>
-                                    <button className='bg-blue-500 w-full  hover:shadow-blue-500/50 shadow-lg text-white rounded-md px-7 py-2 my-2'>Add Category</button>
+                                <input
+                                    onChange={handleImage}
+                                    className='hidden' type="file" name="image" id="image" required multiple="multiple" />
+                                <div className='mt-3'>
+                                    {/* submit button */}
+                                    <button
+                                        disabled={loader ? true : false}
+                                        type="submit"
+                                        className={`py-2 px-4 w-full bg-blue-500 hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md mb-3 ${loader && 'bg-blue-400'} `}>
+                                        {
+                                            loader ? <Loader loadingText={'Uploading...'} /> : 'Add Category'
+                                        }
+                                    </button>
                                 </div>
                             </form>
                         </div>

@@ -142,7 +142,7 @@ const Profile = () => {
                                             onClick={() => setSeePass(!seePass)}
                                             className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2">
                                             {
-                                                seePass ? <FiEye /> : <FiEyeOff />
+                                                seePass ? <FiEyeOff /> : <FiEye />
                                             }
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@ const Profile = () => {
                                             onClick={() => setSeeNewPass(!seeNewPass)}
                                             className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2">
                                             {
-                                                seeNewPass ? <FiEye /> : <FiEyeOff />
+                                                seeNewPass ? <FiEyeOff /> : <FiEye />
                                             }
                                         </div>
                                     </div>
