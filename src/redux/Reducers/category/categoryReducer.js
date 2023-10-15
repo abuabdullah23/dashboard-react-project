@@ -1,15 +1,29 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../api/api";
 
-// admin login info and api config
+// category add info and api config
 export const categoryAdd = createAsyncThunk(
     'category/categoryAdd',
-    async ({name, image}, { rejectWithValue, fulfillWithValue }) => {
+    async ({ name, image }, { rejectWithValue, fulfillWithValue }) => {
         try {
             const formData = new FormData()
             formData.append('name', name)
             formData.append('image', image)
             const { data } = await api.post('/category-add', formData, { withCredentials: true });
+            // console.log(data);
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
+// category get info and api config
+export const categoryGet = createAsyncThunk(
+    'category/categoryGet',
+    async ({ page, searchValue, perPage }, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const { data } = await api.get(`/category-get?page=${page}&&searchValue=${searchValue}&&perPage=${perPage}`, { withCredentials: true });
             console.log(data);
             return fulfillWithValue(data)
         } catch (error) {
@@ -25,6 +39,7 @@ const categoryReducer = createSlice({
         errorMessage: '',
         loader: false,
         categories: [],
+        totalCategory: 0
     },
     reducers: {
         // for message clear after action when error or success
@@ -47,6 +62,10 @@ const categoryReducer = createSlice({
             state.loader = false
             state.successMessage = payload.message;
             state.categories = [...state.categories, payload.category]
+        },
+        [categoryGet.fulfilled]: (state, { payload }) => {
+            state.totalCategory = payload.totalCategory;
+            state.categories = payload.categories;
         },
     }
 })

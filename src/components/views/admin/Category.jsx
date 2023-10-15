@@ -6,13 +6,14 @@ import { BsImage } from 'react-icons/bs';
 import { AiOutlineClose } from 'react-icons/ai';
 import Loader from '../../Loader/Loader';
 import { useDispatch, useSelector } from 'react-redux';
-import { categoryAdd } from '../../../redux/Reducers/category/categoryReducer';
+import { categoryAdd, categoryGet } from '../../../redux/Reducers/category/categoryReducer';
 import toast from 'react-hot-toast';
 import { messageClear } from '../../../redux/Reducers/auth/authReducerSlice';
+import Search from '../../SearchBox/Search';
 
 const Category = () => {
     const dispatch = useDispatch();
-    const { loader, successMessage, errorMessage } = useSelector(state => state.category)
+    const { loader, successMessage, errorMessage, categories } = useSelector(state => state.category)
     const [perPage, setPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
     const [show, setShow] = useState(false);
@@ -44,26 +45,56 @@ const Category = () => {
         //     image: state.image
         // }
         dispatch(categoryAdd(state))
+            // right way
+            .then((res) => {
+                // console.log(res);
+                if (res.meta.requestStatus === 'fulfilled') {
+                    toast.success(successMessage)
+                    dispatch(messageClear())
+                    setState({
+                        name: '',
+                        image: ''
+                    })
+                    setImageShow('')
+                } else {
+                    if (res.meta.requestStatus === 'rejected') {
+                        toast.error(errorMessage)
+                        dispatch(messageClear())
+                    }
+                }
+            })
     }
+
+    // get category
+    useEffect(() => {
+        const obj = {
+            perPage: parseInt(perPage),
+            page: parseInt(currentPage),
+            searchValue
+        }
+        dispatch(categoryGet(obj))
+    }, [searchValue, currentPage, perPage])
+
 
     // console.log(state);
 
-    useEffect(() => {
-        if (successMessage) {
-            toast.success(successMessage)
-            dispatch(messageClear())
-            setState({
-                name: '',
-                image: ''
-            })
-            setImageShow('')
-        }
-        if (errorMessage) {
-            toast.error(errorMessage)
-            dispatch(messageClear())
-        }
+    // এভাবেও করা যায়, তবে উত্তম হলো উপরেরটা।
+    // useEffect(() => {
+    //     if (successMessage) {
+    //         toast.success(successMessage)
+    //         dispatch(messageClear())
+    //         setState({
+    //             name: '',
+    //             image: ''
+    //         })
+    //         setImageShow('')
+    //     }
+    //     if (errorMessage) {
+    //         toast.error(errorMessage)
+    //         dispatch(messageClear())
+    //     }
 
-    }, [successMessage, errorMessage])
+    // }, [successMessage, errorMessage])
 
 
     return (
@@ -76,16 +107,11 @@ const Category = () => {
 
             <div className='flex flex-wrap w-full'>
                 <div className='w-full lg:w-7/12 p-4 bg-[#283046] rounded-md'>
-                    <div className='flex justify-between items-center'>
-                        <select
-                            onChange={(e) => setPerPage(parseInt(e.target.value))}
-                            className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]'>
-                            <option value="5">5</option>
-                            <option value="15">15</option>
-                            <option value="25">25</option>
-                        </select>
-                        <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' type="text" placeholder='search' />
-                    </div>
+                    <Search
+                        setPerPage={setPerPage}
+                        searchValue={searchValue}
+                        setSearchValue={setSearchValue} />
+
                     {/* Table data */}
                     <div className='relative overflow-x-auto'>
                         <table className='w-full text-sm text-left text-[#d0d2d6]'>
@@ -99,10 +125,10 @@ const Category = () => {
                             </thead>
                             <tbody>
                                 {
-                                    [1, 2, 3, 4, 5].map((item, i) => <tr key={i}>
-                                        <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'>{item}</td>
-                                        <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><img className='h-11 w-11' src={`${import.meta.env.VITE_DASHBOARD_URL}/images/category/${item}.jpg`} alt="category image" /></td>
-                                        <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><span>Sports</span></td>
+                                    categories.map((item, i) => <tr key={i}>
+                                        <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'>{i + 1}</td>
+                                        <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><img className='h-11 w-11' src={item.image} alt="category image" /></td>
+                                        <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><span>{item.name}</span></td>
                                         <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'>
                                             <div className='flex justify-start items-center gap-4'>
                                                 <Link className='p-[6px] bg-orange-500 rounded-sm hover:shadow-lg hover:shadow-orange-500/50'><FaEdit /></Link>
