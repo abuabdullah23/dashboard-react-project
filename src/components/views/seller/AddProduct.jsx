@@ -1,24 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BsImages } from 'react-icons/bs';
 import { IoCloseSharp } from 'react-icons/io5';
+import { useDispatch, useSelector } from 'react-redux';
+import { categoryGet, messageClear } from '../../../redux/Reducers/category/categoryReducer';
+import { addProduct } from '../../../redux/Reducers/product/productReducer';
+import Loader from '../../Loader/Loader';
+import toast from 'react-hot-toast';
 
 const AddProduct = () => {
+    const dispatch = useDispatch();
     const [catShow, setCatShow] = useState(false);
     const [category, setCategory] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [imageShow, setImageShow] = useState([]);
     const [images, setImages] = useState([]);
+    const [allCategory, setAllCategory] = useState([]);
+    const { categories } = useSelector(state => state.category);
+    const { loader, successMessage, errorMessage } = useSelector(state => state.product);
 
-    const categories = [
-        { id: 1, name: 'Sports' },
-        { id: 2, name: 'T-Shirt' },
-        { id: 3, name: 'Pant' },
-        { id: 4, name: 'Watch' },
-        { id: 5, name: 'Mobile' },
-    ]
+    // get all category and send parameter
+    useEffect(() => {
+        dispatch(categoryGet({
+            perPage: '',
+            searchValue: '',
+            page: '',
+        }))
+    }, [])
 
-    const [allCategory, setAllCategory] = useState(categories);
+    // set categories from backend
+    useEffect(() => {
+        setAllCategory(categories)
+    }, [categories])
 
     // handle search category
     const categorySearch = (e) => {
@@ -75,22 +88,36 @@ const AddProduct = () => {
         const form = event.target;
         const name = form.name.value;
         const brand = form.brand.value;
-        const category = form.category.value;
         const stock = form.stock.value;
         const price = form.price.value;
         const discount = form.discount.value;
         const description = form.description.value;
-        const productData = {
-            name,
-            brand,
-            category,
-            stock: parseInt(stock),
-            price: parseInt(price),
-            discount: parseInt(discount),
-            description,
-            imageShow
+
+        const formData = new FormData()
+        formData.append('name', name)
+        formData.append('brand', brand)
+        formData.append('stock', stock)
+        formData.append('price', price)
+        formData.append('discount', discount)
+        formData.append('description', description)
+        formData.append('category', category)
+        formData.append('shopName', 'Easy Fashion')
+        for (let i = 0; i < images.length; i++) {
+            formData.append('images', images[i])
         }
-        console.log(productData);
+        dispatch(addProduct(formData))
+            .then((res) => {
+                if (res.meta.requestStatus === 'fulfilled') {
+                    toast.success(successMessage);
+                    dispatch(messageClear());
+                    form.reset('');
+                } else {
+                    if (res.meta.requestStatus === 'rejected') {
+                        toast.error(errorMessage);
+                        dispatch(messageClear());
+                    }
+                }
+            })
     }
 
     return (
@@ -182,10 +209,15 @@ const AddProduct = () => {
                             </label>
                             <input multiple onChange={handleImage} className='hidden' type="file" name='image' id='image' />
                         </div>
-                        <div>
-                            <button type='submit' className='bg-blue-500 
-                            hover:shadow-blue-500/50 shadow-lg text-white rounded-md px-7 py-2 my-2'>Add Product</button>
-                        </div>
+                        {/* submit button */}
+                        <button
+                            disabled={loader ? true : false}
+                            type="submit"
+                            className={`py-2 px-4 w-fit bg-blue-500 hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md mb-3 ${loader && 'bg-blue-400'} `}>
+                            {
+                                loader ? <Loader loadingText={'Adding Product...'} /> : 'Add Product'
+                            }
+                        </button>
                     </form>
                 </div>
             </div>
