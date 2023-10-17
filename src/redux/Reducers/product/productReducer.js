@@ -15,6 +15,20 @@ export const addProduct = createAsyncThunk(
     }
 )
 
+// category get info and api config
+export const getProduct = createAsyncThunk(
+    'product/getProduct',
+    async ({perPage, page, searchValue}, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const { data } = await api.get(`/get-product?page=${page}&&searchValue=${searchValue}&&perPage=${perPage}`, { withCredentials: true });
+            console.log(data);
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
 const productReducer = createSlice({
     name: 'product',
     initialState: {
@@ -45,7 +59,10 @@ const productReducer = createSlice({
             state.loader = false
             state.successMessage = payload.message;
         },
-
+        [getProduct.fulfilled]: (state, { payload }) => {
+            state.totalProducts = payload.totalProducts;
+            state.products = payload.products;
+        },
     }
 })
 

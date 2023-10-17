@@ -111,6 +111,8 @@ const AddProduct = () => {
                     toast.success(successMessage);
                     dispatch(messageClear());
                     form.reset('');
+                    setImageShow([]);
+                    setCategory('');
                 } else {
                     if (res.meta.requestStatus === 'rejected') {
                         toast.error(errorMessage);
