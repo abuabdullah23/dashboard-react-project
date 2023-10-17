@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { categoryGet } from '../../../redux/Reducers/category/categoryReducer';
-import { getProduct, messageClear, updateProduct } from '../../../redux/Reducers/product/productReducer';
+import { getProduct, messageClear, updateProduct, updateProductImage } from '../../../redux/Reducers/product/productReducer';
 import Loader from '../../Loader/Loader';
 import toast from 'react-hot-toast';
 
@@ -51,8 +51,22 @@ const EditProduct = () => {
     // change image when select add product image
     const changeImage = (img, files) => {
         if (files.length > 0) {
-            console.log(img);
-            console.log(files[0]);
+            dispatch(updateProductImage({
+                oldImage: img,
+                newImage: files[0],
+                productId
+            }))
+                .then((res) => {
+                    if (res.meta.requestStatus === 'fulfilled') {
+                        toast.success(successMessage);
+                        // dispatch(messageClear());
+                    } else {
+                        if (res.meta.requestStatus === 'rejected') {
+                            toast.error(errorMessage);
+                            // dispatch(messageClear());
+                        }
+                    }
+                })
         }
     }
 
@@ -172,14 +186,15 @@ const EditProduct = () => {
 
                         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 xs:gap-4 md:gap-4 w-full mb-4'>
                             {
-                                imageShow && imageShow.map((img, i) => <div key={i} className='h-[180px]'>
-                                    <label htmlFor={i}>
-                                        <img src={img} className='w-full h-full rounded-sm object-cover' alt="image" />
-                                    </label>
-                                    <input onChange={(e) => changeImage(img, e.target.files)} type="file" id={i} className='hidden' />
-                                </div>)
+                                imageShow && imageShow.map((img, i) =>
+                                    <div key={i} className='h-[180px]'>
+                                        <label htmlFor={i}>
+                                            <img src={img} className='w-full h-full rounded-sm object-cover' alt="image" />
+                                        </label>
+                                        <input onChange={(e) => changeImage(img, e.target.files)} type="file" id={i} className='hidden' />
+                                    </div>
+                                )
                             }
-
                         </div>
                         <div>
                             {/* submit button */}

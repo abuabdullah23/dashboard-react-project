@@ -21,6 +21,24 @@ export const updateProduct = createAsyncThunk(
     async (productInfo, { rejectWithValue, fulfillWithValue }) => {
         try {
             const { data } = await api.post('/update-product', productInfo, { withCredentials: true });
+            // console.log(data);
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
+// update product image and api config
+export const updateProductImage = createAsyncThunk(
+    'product/updateProductImage',
+    async ({ productId, oldImage, newImage }, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const formData = new FormData();
+            formData.append('productId', productId);
+            formData.append('oldImage', oldImage);
+            formData.append('newImage', newImage);
+            const { data } = await api.post('/update-product-image', formData, { withCredentials: true });
             console.log(data);
             return fulfillWithValue(data)
         } catch (error) {
@@ -108,6 +126,20 @@ const productReducer = createSlice({
         },
         [updateProduct.fulfilled]: (state, { payload }) => {
             state.loader = false
+            state.product = payload.product;
+            state.successMessage = payload.message;
+        },
+
+        [updateProductImage.pending]: (state, _) => {
+            state.loader = true
+        },
+        [updateProductImage.rejected]: (state, { payload }) => {
+            state.loader = false
+            state.errorMessage = payload.error
+        },
+        [updateProductImage.fulfilled]: (state, { payload }) => {
+            state.loader = false
+            state.product = payload.product;
             state.successMessage = payload.message;
         },
     }
