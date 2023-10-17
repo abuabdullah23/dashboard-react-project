@@ -24,7 +24,7 @@ export const categoryGet = createAsyncThunk(
     async ({ page, searchValue, perPage }, { rejectWithValue, fulfillWithValue }) => {
         try {
             const { data } = await api.get(`/category-get?page=${page}&&searchValue=${searchValue}&&perPage=${perPage}`, { withCredentials: true });
-            console.log(data);
+            // console.log(data);
             return fulfillWithValue(data)
         } catch (error) {
             return rejectWithValue(error.response.data);

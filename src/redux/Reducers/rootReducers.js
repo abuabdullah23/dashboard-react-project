@@ -5,7 +5,7 @@ import productReducer from "./product/productReducer";
 const rootReducers = {
     auth: authReducerSlice,
     category: categoryReducer,
-    product: productReducer,
+    products: productReducer,
 };
 
 export default rootReducers;

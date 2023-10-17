@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../api/api";
 
-// category add info and api config
+// add product and api config
 export const addProduct = createAsyncThunk(
     'product/addProduct',
     async (productInfo, { rejectWithValue, fulfillWithValue }) => {
@@ -15,12 +15,12 @@ export const addProduct = createAsyncThunk(
     }
 )
 
-// category get info and api config
-export const getProduct = createAsyncThunk(
-    'product/getProduct',
-    async ({perPage, page, searchValue}, { rejectWithValue, fulfillWithValue }) => {
+// update product and api config
+export const updateProduct = createAsyncThunk(
+    'product/updateProduct',
+    async (productInfo, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await api.get(`/get-product?page=${page}&&searchValue=${searchValue}&&perPage=${perPage}`, { withCredentials: true });
+            const { data } = await api.post('/update-product', productInfo, { withCredentials: true });
             console.log(data);
             return fulfillWithValue(data)
         } catch (error) {
@@ -29,13 +29,42 @@ export const getProduct = createAsyncThunk(
     }
 )
 
+// get products and api config
+export const getProducts = createAsyncThunk(
+    'products/getProducts',
+    async ({ perPage, page, searchValue }, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const { data } = await api.get(`/get-products?page=${page}&&searchValue=${searchValue}&&perPage=${perPage}`, { withCredentials: true });
+            // console.log(data);
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
+// get product info and api config
+export const getProduct = createAsyncThunk(
+    'product/getProduct',
+    async (productId, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const { data } = await api.get(`/get-product/${productId}`, { withCredentials: true });
+            // console.log(data);
+            return fulfillWithValue(data)
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
 const productReducer = createSlice({
-    name: 'product',
+    name: 'products',
     initialState: {
         successMessage: '',
         errorMessage: '',
         loader: false,
         products: [],
+        product: '',
         totalProducts: 0
     },
     reducers: {
@@ -59,9 +88,27 @@ const productReducer = createSlice({
             state.loader = false
             state.successMessage = payload.message;
         },
-        [getProduct.fulfilled]: (state, { payload }) => {
+
+        [getProducts.fulfilled]: (state, { payload }) => {
             state.totalProducts = payload.totalProducts;
             state.products = payload.products;
+        },
+
+        // for single product
+        [getProduct.fulfilled]: (state, { payload }) => {
+            state.product = payload.product;
+        },
+
+        [updateProduct.pending]: (state, _) => {
+            state.loader = true
+        },
+        [updateProduct.rejected]: (state, { payload }) => {
+            state.loader = false
+            state.errorMessage = payload.error
+        },
+        [updateProduct.fulfilled]: (state, { payload }) => {
+            state.loader = false
+            state.successMessage = payload.message;
         },
     }
 })

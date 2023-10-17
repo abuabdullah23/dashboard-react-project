@@ -4,11 +4,11 @@ import Pagination from '../Pagination/Pagination';
 import { Link } from 'react-router-dom';
 import { FaEdit, FaEye, FaTrashAlt } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProduct } from '../../../redux/Reducers/product/productReducer';
+import { getProducts } from '../../../redux/Reducers/product/productReducer';
 
 const Products = () => {
     const dispatch = useDispatch();
-    const { products, totalProducts } = useSelector(state => state.product);
+    const { products, totalProducts } = useSelector(state => state.products);
     const [perPage, setPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState('');
@@ -20,7 +20,7 @@ const Products = () => {
             page: parseInt(currentPage),
             searchValue
         }
-        dispatch(getProduct(obj))
+        dispatch(getProducts(obj))
     }, [searchValue, currentPage, perPage])
 
     return (
@@ -45,7 +45,7 @@ const Products = () => {
                         </thead>
                         <tbody>
                             {
-                                products.map((item, i) => <tr key={item.id}>
+                                products.map((item, i) => <tr key={item._id}>
                                     <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'>{i + 1}</td>
                                     <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><img className='h-11 w-11' src={item.images[0]} alt="category image" /></td>
                                     <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'><span>{item?.name?.slice(0, 20)}...</span></td>
@@ -57,7 +57,7 @@ const Products = () => {
 
                                     <td scope='row' className='py-1 px-4 font-medium whitespace-nowrap'>
                                         <div className='flex justify-start items-center gap-4'>
-                                            <Link to={`/seller/dashboard/edit-product/3453`} className='p-[6px] bg-orange-500 rounded-sm hover:shadow-lg hover:shadow-orange-500/50'><FaEdit /></Link>
+                                            <Link to={`/seller/dashboard/edit-product/${item._id}`} className='p-[6px] bg-orange-500 rounded-sm hover:shadow-lg hover:shadow-orange-500/50'><FaEdit /></Link>
                                             <Link className='p-[6px] bg-green-500 rounded-sm hover:shadow-lg hover:shadow-green-500/50'><FaEye /></Link>
                                             <button className='p-[6px] bg-red-500 rounded-sm hover:shadow-lg hover:shadow-red-500/50'><FaTrashAlt /></button>
                                         </div>

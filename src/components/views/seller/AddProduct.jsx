@@ -17,7 +17,7 @@ const AddProduct = () => {
     const [images, setImages] = useState([]);
     const [allCategory, setAllCategory] = useState([]);
     const { categories } = useSelector(state => state.category);
-    const { loader, successMessage, errorMessage } = useSelector(state => state.product);
+    const { loader, successMessage, errorMessage } = useSelector(state => state.products);
 
     // get all category and send parameter
     useEffect(() => {

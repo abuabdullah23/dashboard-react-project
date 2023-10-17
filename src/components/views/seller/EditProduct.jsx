@@ -1,21 +1,40 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+import { categoryGet } from '../../../redux/Reducers/category/categoryReducer';
+import { getProduct, messageClear, updateProduct } from '../../../redux/Reducers/product/productReducer';
+import Loader from '../../Loader/Loader';
+import toast from 'react-hot-toast';
 
 const EditProduct = () => {
     const [catShow, setCatShow] = useState(false);
     const [category, setCategory] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [imageShow, setImageShow] = useState([]);
+    const { productId } = useParams();
+    const dispatch = useDispatch();
+    const { loader, product, successMessage, errorMessage } = useSelector(state => state.products);
+    const { categories } = useSelector(state => state.category);
+    const [allCategory, setAllCategory] = useState([]);
 
-    const categories = [
-        { id: 1, name: 'Sports' },
-        { id: 2, name: 'T-Shirt' },
-        { id: 3, name: 'Pant' },
-        { id: 4, name: 'Watch' },
-        { id: 5, name: 'Mobile' },
-    ]
+    // get all category and send parameter
+    useEffect(() => {
+        dispatch(categoryGet({
+            perPage: '',
+            searchValue: '',
+            page: '',
+        }))
+    }, [])
 
-    const [allCategory, setAllCategory] = useState(categories);
+    // set categories from backend
+    useEffect(() => {
+        setAllCategory(categories)
+    }, [categories])
+
+    // get one product (with ID) using useEffect by redux
+    useEffect(() => {
+        dispatch(getProduct(productId))
+    }, [productId])
 
     // handle search category
     const categorySearch = (e) => {
@@ -49,6 +68,7 @@ const EditProduct = () => {
         const discount = form.discount.value;
         const description = form.description.value;
         const productData = {
+            productId,
             name,
             brand,
             category,
@@ -56,18 +76,26 @@ const EditProduct = () => {
             price: parseInt(price),
             discount: parseInt(discount),
             description,
-            imageShow
+            images: imageShow
         }
+        dispatch(updateProduct(productData))
+            .then((res) => {
+                if (res.meta.requestStatus === 'fulfilled') {
+                    toast.success(successMessage);
+                    dispatch(messageClear());
+                } else {
+                    if (res.meta.requestStatus === 'rejected') {
+                        toast.error(errorMessage);
+                        dispatch(messageClear());
+                    }
+                }
+            })
     }
 
     useEffect(() => {
-        setImageShow([
-            "blob:http://localhost:5173/482afe69-09c9-4fdc-94b7-f7df2a10d64e",
-            "blob:http://localhost:5173/482afe69-09c9-4fdc-94b7-f7df2a10d64e",
-        ])
-    }, [])
-
-
+        setImageShow(product.images);
+        setCategory(product.category)
+    }, [product])
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
@@ -84,11 +112,11 @@ const EditProduct = () => {
                         <div className='flex flex-col md:flex-row gap-4 w-full mb-4'>
                             <div className='flex flex-col w-full gap-1'>
                                 <label htmlFor="name">Product name</label>
-                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='name' type="text" placeholder='product name' />
+                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='name' type="text" placeholder='product name' defaultValue={product.name} />
                             </div>
                             <div className='flex flex-col w-full gap-1'>
                                 <label htmlFor="brand">Product brand</label>
-                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='brand' type="text" placeholder='product brand' />
+                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='brand' type="text" placeholder='product brand' defaultValue={product.brand} />
                             </div>
                         </div>
 
@@ -120,33 +148,33 @@ const EditProduct = () => {
                             </div>
                             <div className='flex flex-col w-full gap-1'>
                                 <label htmlFor="stock">Stock</label>
-                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='stock' type="number" placeholder='stock' min={0} />
+                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='stock' type="number" placeholder='stock' defaultValue={product.stock} min={0} />
                             </div>
                         </div>
 
                         <div className='flex flex-col md:flex-row gap-4 w-full mb-4'>
                             <div className='flex flex-col w-full gap-1'>
                                 <label htmlFor="price">Price</label>
-                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='price' type="number" min={0} placeholder='Price' />
+                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='price' type="number" min={0} placeholder='Price' defaultValue={product.price} />
                             </div>
                             <div className='flex flex-col w-full gap-1'>
                                 <label htmlFor="discount">discount</label>
-                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='discount' type="number" min={0} placeholder='%discount%' />
+                                <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='discount' type="number" min={0} placeholder='%discount%' defaultValue={product.discount} />
                             </div>
                         </div>
 
                         <div className='flex flex-col md:flex-row gap-4 w-full mb-4'>
                             <div className='flex flex-col w-full gap-1'>
                                 <label htmlFor="description">Description</label>
-                                <textarea className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='description' type="text" min={0} placeholder='Description' />
+                                <textarea className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='description' type="text" min={0} placeholder='Description' defaultValue={product.description} />
                             </div>
                         </div>
 
                         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 xs:gap-4 md:gap-4 w-full mb-4'>
                             {
-                                imageShow.map((img, i) => <div key={i}>
+                                imageShow && imageShow.map((img, i) => <div key={i} className='h-[180px]'>
                                     <label htmlFor={i}>
-                                        <img src={img} alt="image" />
+                                        <img src={img} className='w-full h-full rounded-sm object-cover' alt="image" />
                                     </label>
                                     <input onChange={(e) => changeImage(img, e.target.files)} type="file" id={i} className='hidden' />
                                 </div>)
@@ -154,8 +182,15 @@ const EditProduct = () => {
 
                         </div>
                         <div>
-                            <button className='bg-blue-500 
-                            hover:shadow-blue-500/50 shadow-lg text-white rounded-md px-7 py-2 my-2'>Update Product</button>
+                            {/* submit button */}
+                            <button
+                                disabled={loader ? true : false}
+                                type="submit"
+                                className={`py-2 px-6 w-fit bg-blue-500 hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md mb-3 ${loader && 'bg-blue-400'} `}>
+                                {
+                                    loader ? <Loader loadingText={'Updating...'} /> : 'Update Product'
+                                }
+                            </button>
                         </div>
                     </form>
                 </div>
