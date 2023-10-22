@@ -76,7 +76,7 @@ const Profile = () => {
                             {
                                 userInfo?.image
                                     ? <label htmlFor="img" className='h-[210px] w-[260px] relative cursor-pointer overflow-hidden'>
-                                        <img className='w-full h-full object-cover object-top' src={userInfo.image} alt="image" />
+                                        <img className='w-full h-full object-contain' src={userInfo.image} alt="image" />
                                         {
                                             loader && <div className='bg-slate-600 absolute left-0 top-0 w-full h-full opacity-70 flex justify-center items-center z-20'>
                                                 <span><FadeLoader /></span>

@@ -1,6 +1,39 @@
-import React from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { get_seller, messageClear, update_seller_status } from '../../../../redux/Reducers/seller/sellerReducer';
+import toast from 'react-hot-toast';
 
 const SellerDetails = () => {
+    const dispatch = useDispatch();
+    const { seller, successMessage, errorMessage } = useSelector(state => state.seller);
+    const { sellerId } = useParams();
+
+    useEffect(() => {
+        dispatch(get_seller(sellerId))
+    }, [sellerId])
+
+    // handle update seller status
+    const submitStatus = (e) => {
+        e.preventDefault();
+        const status = e.target.status.value;
+        dispatch(update_seller_status({
+            sellerId,
+            status
+        }))
+            .then((res) => {
+                if (res.meta.requestStatus === 'fulfilled') {
+                    toast.success(successMessage);
+                    dispatch(messageClear());
+                } else {
+                    if (res.meta.requestStatus === 'rejected') {
+                        toast.error(errorMessage);
+                        dispatch(messageClear());
+                    }
+                }
+            })
+    }
+
     return (
         <div className='px-2 lg:px-7 pt-5'>
             <div className='w-full p-4 bg-[#283046] rounded-md'>
@@ -8,7 +41,12 @@ const SellerDetails = () => {
                     {/* image */}
                     <div className='w-3/12 flex justify-center items-center py-3'>
                         <div>
-                            <img className='w-full h-[230px] rounded-md' src={`${import.meta.env.VITE_DASHBOARD_URL}/images/admin.jpg`} alt="sellers image" />
+                            {
+                                seller?.image
+                                    ? <img className='w-full h-[230px] rounded-md' src={seller.image} alt="sellers image" />
+                                    :
+                                    <span className='text-lg'>Image not uploaded</span>
+                            }
                         </div>
                     </div>
                     {/* info */}
@@ -20,23 +58,23 @@ const SellerDetails = () => {
                             <div className='flex flex-col justify-between text-sm gap-2 p-4 bg-slate-800 rounded-md'>
                                 <div className='flex gap-2'>
                                     <span>Name: </span>
-                                    <span>Zayed</span>
+                                    <span>{seller.name}</span>
                                 </div>
                                 <div className='flex gap-2'>
                                     <span>Email: </span>
-                                    <span>zayed@gmail.com</span>
+                                    <span>{seller.email}</span>
                                 </div>
                                 <div className='flex gap-2'>
                                     <span>Role: </span>
-                                    <span>Admin</span>
+                                    <span>{seller.role}</span>
                                 </div>
                                 <div className='flex gap-2'>
                                     <span>Status: </span>
-                                    <span>active</span>
+                                    <span>{seller.status}</span>
                                 </div>
                                 <div className='flex gap-2'>
                                     <span>Payment Account: </span>
-                                    <span>active</span>
+                                    <span>{seller.payment}</span>
                                 </div>
                             </div>
                         </div>
@@ -51,19 +89,19 @@ const SellerDetails = () => {
                             <div className='flex flex-col justify-between text-sm gap-2 p-4 bg-slate-800 rounded-md'>
                                 <div className='flex gap-2'>
                                     <span>Shop Name: </span>
-                                    <span>Aoz Fashion</span>
+                                    <span>{seller?.shopInfo?.shopName}</span>
                                 </div>
                                 <div className='flex gap-2'>
                                     <span>Division: </span>
-                                    <span>Rajshahi</span>
+                                    <span>{seller?.shopInfo?.division}</span>
                                 </div>
                                 <div className='flex gap-2'>
                                     <span>District: </span>
-                                    <span>Natore</span>
+                                    <span>{seller?.shopInfo?.district}</span>
                                 </div>
                                 <div className='flex gap-2'>
                                     <span>Upazila: </span>
-                                    <span>Baraigram</span>
+                                    <span>{seller?.shopInfo?.subDistrict}</span>
                                 </div>
                             </div>
                         </div>
@@ -73,12 +111,12 @@ const SellerDetails = () => {
 
                 {/* form and submit section */}
                 <div>
-                    <form>
+                    <form onSubmit={submitStatus}>
                         <div className='flex gap-4 py-3'>
-                            <select className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name="" id="">
+                            <select className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name="status" id="status" required defaultValue={seller.status}>
                                 <option value="">--select status--</option>
-                                <option value="active">Active</option>
-                                <option value="deactive">Deactive</option>
+                                <option value="active">active</option>
+                                <option value="deactive">deactive</option>
                             </select>
                             <button type='submit' className='bg-blue-500 hover:shadow
                          bg-blue-500/50 shadow-lg text-white rounded-md px-7 py-2'>Submit</button>
