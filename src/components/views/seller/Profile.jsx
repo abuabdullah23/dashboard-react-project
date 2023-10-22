@@ -5,7 +5,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { FadeLoader } from 'react-spinners';
 import Loader from '../../Loader/Loader';
-import { messageClear, profile_image_upload } from '../../../redux/Reducers/auth/authReducerSlice';
+import { messageClear, profile_image_upload, profile_info_add } from '../../../redux/Reducers/auth/authReducerSlice';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
@@ -34,6 +34,37 @@ const Profile = () => {
                 })
         }
     }
+
+    // handle add seller info
+    const addSellerProfileInfo = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const shopName = form.shopName.value;
+        const division = form.division.value;
+        const district = form.district.value;
+        const subDistrict = form.subDistrict.value;
+
+        const profileInfo = {
+            shopName,
+            division,
+            district,
+            subDistrict
+        }
+        dispatch(profile_info_add(profileInfo))
+            .then((res) => {
+                if (res.meta.requestStatus === 'fulfilled') {
+                    toast.success(successMessage);
+                    dispatch(messageClear());
+                } else {
+                    if (res.meta.requestStatus === 'rejected') {
+                        toast.error(errorMessage);
+                        dispatch(messageClear());
+                    }
+                }
+            })
+    }
+
+
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
@@ -100,26 +131,28 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
-                        {/* user info section */}
+                        {/* seller info section */}
                         <div className='px-0 md:px-5 py-5'>
                             {
                                 !userInfo?.shopInfo ?
-                                    <form className='flex flex-col gap-3 p-4'>
+                                    <form
+                                        onSubmit={addSellerProfileInfo}
+                                        className='flex flex-col gap-3 p-4'>
                                         <div className='flex flex-col w-full gap-1'>
                                             <label htmlFor="shopName">Shop name</label>
-                                            <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md' name='shopName' id='shopName' type="text" placeholder='Shop name' />
+                                            <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md' name='shopName' id='shopName' type="text" placeholder='Shop name' required />
                                         </div>
                                         <div className='flex flex-col w-full gap-1'>
                                             <label htmlFor="division">Division</label>
-                                            <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md' name='division' id='division' type="text" placeholder='Division' />
+                                            <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md' name='division' id='division' type="text" placeholder='Division' required />
                                         </div>
                                         <div className='flex flex-col w-full gap-1'>
                                             <label htmlFor="district">District</label>
-                                            <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md' name='district' id='district' type="text" placeholder='District' />
+                                            <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md' name='district' id='district' type="text" placeholder='District' required />
                                         </div>
                                         <div className='flex flex-col w-full gap-1'>
                                             <label htmlFor="subDistrict">Sub District</label>
-                                            <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md' name='subDistrict' id='subDistrict' type="text" placeholder='Sub District' />
+                                            <input className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md' name='subDistrict' id='subDistrict' type="text" placeholder='Sub District' required />
                                         </div>
                                         <button
                                             disabled={loader ? true : false}
@@ -136,19 +169,19 @@ const Profile = () => {
                                             <span className='p-[6px] bg-orange-500 rounded-sm hover:shadow-lg hover:shadow-orange-500/50 absolute top-2 right-2 cursor-pointer text-white'><FaEdit /></span>
                                             <div className='flex gap-2'>
                                                 <span>Shop Name : </span>
-                                                <span>Abdullah Fashion</span>
+                                                <span>{userInfo?.shopInfo?.shopName}</span>
                                             </div>
                                             <div className='flex gap-2'>
                                                 <span>Division : </span>
-                                                <span>Rajshahi</span>
+                                                <span>{userInfo?.shopInfo?.division}</span>
                                             </div>
                                             <div className='flex gap-2'>
                                                 <span>District : </span>
-                                                <span>Natore</span>
+                                                <span>{userInfo?.shopInfo?.district}</span>
                                             </div>
                                             <div className='flex gap-2'>
                                                 <span>Sub District : </span>
-                                                <span>Baraigram</span>
+                                                <span>{userInfo?.shopInfo?.subDistrict}</span>
                                             </div>
                                         </div>
                                     </div>
