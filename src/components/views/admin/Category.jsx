@@ -49,7 +49,7 @@ const Category = () => {
             .then((res) => {
                 // console.log(res);
                 if (res.meta.requestStatus === 'fulfilled') {
-                    toast.success(successMessage)
+                    toast.success(successMessage || "Category added successful")
                     dispatch(messageClear())
                     setState({
                         name: '',
@@ -58,7 +58,7 @@ const Category = () => {
                     setImageShow('')
                 } else {
                     if (res.meta.requestStatus === 'rejected') {
-                        toast.error(errorMessage)
+                        toast.error(errorMessage || 'Category not added.')
                         dispatch(messageClear())
                     }
                 }

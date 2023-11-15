@@ -23,11 +23,11 @@ const SellerDetails = () => {
         }))
             .then((res) => {
                 if (res.meta.requestStatus === 'fulfilled') {
-                    toast.success(successMessage);
+                    toast.success(successMessage || 'Updated seller status');
                     dispatch(messageClear());
                 } else {
                     if (res.meta.requestStatus === 'rejected') {
-                        toast.error(errorMessage);
+                        toast.error(errorMessage || 'Not updated seller status');
                         dispatch(messageClear());
                     }
                 }
@@ -117,6 +117,7 @@ const SellerDetails = () => {
                                 <option value="">--select status--</option>
                                 <option value="active">active</option>
                                 <option value="deactive">deactive</option>
+                                <option value="pending">pending</option>
                             </select>
                             <button type='submit' className='bg-blue-500 hover:shadow
                          bg-blue-500/50 shadow-lg text-white rounded-md px-7 py-2'>Submit</button>

@@ -108,18 +108,24 @@ const AddProduct = () => {
         dispatch(addProduct(formData))
             .then((res) => {
                 if (res.meta.requestStatus === 'fulfilled') {
-                    toast.success(successMessage);
+                    toast.success(successMessage || 'Product added successful');
                     dispatch(messageClear());
                     form.reset('');
                     setImageShow([]);
                     setCategory('');
                 } else {
                     if (res.meta.requestStatus === 'rejected') {
-                        toast.error(errorMessage);
+                        toast.error(errorMessage || 'Not added');
                         dispatch(messageClear());
                     }
                 }
             })
+    }
+
+    // handle text area height 
+    const handleAreaHeight = (e) => {
+        e.target.style.height = 'inherit'
+        e.target.style.height = `${e.target.scrollHeight}px`
     }
 
     return (
@@ -191,7 +197,7 @@ const AddProduct = () => {
                         <div className='flex flex-col md:flex-row gap-4 w-full mb-4'>
                             <div className='flex flex-col w-full gap-1'>
                                 <label htmlFor="description">Description</label>
-                                <textarea className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6]' name='description' type="text" min={0} placeholder='Description' />
+                                <textarea onChange={handleAreaHeight} className='px-4 py-2 border border-slate-700 focus:border-indigo-500 outline-none bg-[#283046] rounded-md text-[#d0d2d6] overflow-hidden' name='description' type="text" min={0} placeholder='Description' />
                             </div>
                         </div>
 

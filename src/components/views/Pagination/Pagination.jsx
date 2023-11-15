@@ -22,6 +22,7 @@ const Pagination = ({ pageNumber, setPageNumber, totalItem, perPage, showItem })
         for (let i = startPage; i < endPage; i++) {
             buttons.push(
                 <li
+                    key={i}
                     onClick={() => setPageNumber(i)}
                     className={`
                     ${pageNumber === i ? 'bg-indigo-500 shadow-lg shadow-indigo-500/50 text-white' : 'bg-slate-700 hover:bg-indigo-500 shadow-lg hover:shadow-indigo-500/50 text-[#d0d2d6] hover:text-white'} w-8 h-8 rounded-full flex justify-center items-center cursor-pointer`
@@ -43,7 +44,7 @@ const Pagination = ({ pageNumber, setPageNumber, totalItem, perPage, showItem })
                 createBtn()
             }
             {
-                pageNumber < totalPage-1 && <li onClick={() => setPageNumber(pageNumber + 1)} className="w-8 h-8 rounded-full flex justify-center items-center bg-slate-700 text-[#d0d2d6] cursor-pointer">
+                pageNumber < totalPage - 1 && <li onClick={() => setPageNumber(pageNumber + 1)} className="w-8 h-8 rounded-full flex justify-center items-center bg-slate-700 text-[#d0d2d6] cursor-pointer">
                     <BsChevronRight />
                 </li>
             }

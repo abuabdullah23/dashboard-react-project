@@ -12,6 +12,7 @@ const Profile = () => {
     const dispatch = useDispatch();
     const { loader, userInfo, successMessage, errorMessage } = useSelector(state => state.auth);
 
+    console.log({ errorMessage, successMessage });
     const [seePass, setSeePass] = useState(false);
     const [seeNewPass, setSeeNewPass] = useState(false);
 
@@ -23,11 +24,13 @@ const Profile = () => {
             dispatch(profile_image_upload(formData))
                 .then((res) => {
                     if (res.meta.requestStatus === 'fulfilled') {
-                        toast.success(successMessage);
+                        // toast.success(successMessage);
+                        toast.success('Image upload success');
                         dispatch(messageClear());
                     } else {
                         if (res.meta.requestStatus === 'rejected') {
-                            toast.error(errorMessage);
+                            // toast.error(errorMessage);
+                            toast.error('Image not upload');
                             dispatch(messageClear());
                         }
                     }
@@ -53,11 +56,11 @@ const Profile = () => {
         dispatch(profile_info_add(profileInfo))
             .then((res) => {
                 if (res.meta.requestStatus === 'fulfilled') {
-                    toast.success(successMessage);
+                    toast.success(successMessage || 'Info added successful');
                     dispatch(messageClear());
                 } else {
                     if (res.meta.requestStatus === 'rejected') {
-                        toast.error(errorMessage);
+                        toast.error(errorMessage || 'Not added');
                         dispatch(messageClear());
                     }
                 }

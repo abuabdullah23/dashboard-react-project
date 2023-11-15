@@ -58,12 +58,12 @@ const EditProduct = () => {
             }))
                 .then((res) => {
                     if (res.meta.requestStatus === 'fulfilled') {
-                        toast.success(successMessage);
-                        // dispatch(messageClear());
+                        toast.success(successMessage || 'Image update successful');
+                        dispatch(messageClear());
                     } else {
                         if (res.meta.requestStatus === 'rejected') {
-                            toast.error(errorMessage);
-                            // dispatch(messageClear());
+                            toast.error(errorMessage || 'not image updated');
+                            dispatch(messageClear());
                         }
                     }
                 })
@@ -95,11 +95,11 @@ const EditProduct = () => {
         dispatch(updateProduct(productData))
             .then((res) => {
                 if (res.meta.requestStatus === 'fulfilled') {
-                    toast.success(successMessage);
+                    toast.success(successMessage || 'Product has been updated');
                     dispatch(messageClear());
                 } else {
                     if (res.meta.requestStatus === 'rejected') {
-                        toast.error(errorMessage);
+                        toast.error(errorMessage || 'Not updated');
                         dispatch(messageClear());
                     }
                 }

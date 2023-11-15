@@ -32,12 +32,12 @@ const Register = () => {
     // for show error or success message in toast
     useEffect(() => {
         if (successMessage) {
-            toast.success(successMessage)
+            toast.success(successMessage || 'Registration Successful')
             dispatch(messageClear())
             navigate('/')
         }
         if (errorMessage) {
-            toast.error(errorMessage)
+            toast.error(errorMessage || 'Not Successful')
             dispatch(messageClear())
         }
     }, [successMessage, errorMessage])
